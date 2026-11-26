@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viajes Los Choris — Tu próxima aventura empieza acá</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen bg-white text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-[#EDF4FA] via-white to-[#CFE3F1] border-b-4 sticky top-0 z-30 shadow-sm" style="border-color:#8FB6D8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-4">
+        <button onclick="switchView('home')" class="flex items-center gap-3 text-left">
+          <div class="p-3 rounded-2xl shadow-md transition-transform hover:rotate-6" style="background:linear-gradient(to bottom right,#8FB6D8,#5F86A6)">
+            <i data-lucide="bus" class="text-white w-8 h-8"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold" style="color:#243A5E">Viajes Los Choris</h1>
+            <p id="header-sub" class="text-xs text-gray-500">Pasajes, hoteles y paquetes</p>
+          </div>
+        </button>
+
+        <div class="flex items-center gap-3">
+          <button id="btn-nav-home" onclick="switchView('home')" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-[#243A5E] bg-[#EDF4FA] hover:bg-[#CFE3F1] transition-colors">
+            Inicio
+          </button>
+          <button onclick="switchView('cart')" class="relative p-3 rounded-2xl transition-all hover:scale-105 shadow-sm flex items-center gap-2 bg-[#CFE3F1] hover:bg-[#8FB6D8]" aria-label="Carrito de compras">
+            <i data-lucide="shopping-cart" class="w-6 h-6 text-[#243A5E]"></i>
+            <span class="hidden sm:inline text-sm font-semibold text-[#243A5E]">Carrito</span>
+            <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center shadow-md">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== VISTA HOME (Figma: Home-page-for-travel-company) ==================== -->
+  <main id="view-home">
+    <!-- Hero -->
+    <section class="relative overflow-hidden" style="background:linear-gradient(to bottom right,#8FB6D8,#CFE3F1,#EDF4FA)">
+      <div class="absolute top-10 right-10 w-32 h-32 rounded-full blur-xl bg-white/20"></div>
+      <div class="absolute bottom-20 left-10 w-40 h-40 rounded-full blur-2xl" style="background:rgba(143,182,216,0.3)"></div>
+      <div class="absolute inset-0 opacity-20">
+        <img src="https://images.unsplash.com/photo-1766247096062-1bdf48343fb8?auto=format&fit=crop&w=1200&q=80" alt="Bus en carretera" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+      </div>
+
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <div class="text-center mb-10">
+          <h2 class="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">Tu próxima aventura empieza acá</h2>
+          <p class="text-xl md:text-2xl text-white drop-shadow-md">los mejores destinos, los mejores precios</p>
+        </div>
+
+        <form id="search-form" class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-4xl mx-auto border-4 border-[#CFE3F1]">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="flex items-center gap-3 p-4 border-2 rounded-2xl bg-[#EDF4FA] border-[#CFE3F1] hover:border-[#8FB6D8] transition-all">
+              <i data-lucide="map-pin" class="w-6 h-6 flex-shrink-0 text-[#5F86A6]"></i>
+              <div class="flex-1">
+                <label class="text-xs text-gray-600 block">Origen</label>
+                <input id="search-origin" type="text" placeholder="Buenos Aires" value="Buenos Aires" required class="w-full outline-none text-gray-800 bg-transparent font-medium" />
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 p-4 border-2 rounded-2xl bg-[#EDF4FA] border-[#CFE3F1] hover:border-[#8FB6D8] transition-all">
+              <i data-lucide="map-pin" class="w-6 h-6 flex-shrink-0 text-[#5F86A6]"></i>
+              <div class="flex-1">
+                <label class="text-xs text-gray-600 block">Destino</label>
+                <input id="search-dest" type="text" placeholder="Córdoba" value="Córdoba" required class="w-full outline-none text-gray-800 bg-transparent font-medium" />
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 p-4 border-2 rounded-2xl bg-[#EDF4FA] border-[#CFE3F1] hover:border-[#8FB6D8] transition-all">
+              <i data-lucide="calendar" class="w-6 h-6 flex-shrink-0 text-[#5F86A6]"></i>
+              <div class="flex-1">
+                <label class="text-xs text-gray-600 block">Fecha</label>
+                <input id="search-date" type="date" value="2026-03-29" class="w-full outline-none text-gray-800 bg-transparent font-medium" />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full text-white py-4 rounded-2xl transition-all hover:scale-[1.01] flex items-center justify-center gap-2 shadow-lg font-semibold text-lg" style="background:linear-gradient(to right,#8FB6D8,#5F86A6)">
+            <i data-lucide="search" class="w-5 h-5"></i>
+            <span>¡Buscar mi viaje!</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-16" style="background:linear-gradient(to bottom right,#EDF4FA,#CFE3F1,white)">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="text-center bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all hover:-translate-y-1 border-2 border-[#CFE3F1]">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 shadow-md bg-gradient-to-br from-[#CFE3F1] to-[#EDF4FA]">
+              <i data-lucide="shield" class="w-9 h-9 text-[#5F86A6]"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Viajes Seguros</h3>
+            <p class="text-sm text-gray-600">Conductores profesionales y unidades equipadas con la última tecnología</p>
+          </div>
+          <div class="text-center bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all hover:-translate-y-1 border-2 border-[#CFE3F1]">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 shadow-md bg-gradient-to-br from-[#CFE3F1] to-[#EDF4FA]">
+              <i data-lucide="wifi" class="w-9 h-9 text-[#5F86A6]"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">WiFi Gratis</h3>
+            <p class="text-sm text-gray-600">Conectate durante todo el viaje con nuestra red WiFi de alta velocidad</p>
+          </div>
+          <div class="text-center bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all hover:-translate-y-1 border-2 border-[#CFE3F1]">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 shadow-md bg-gradient-to-br from-[#CFE3F1] to-[#EDF4FA]">
+              <i data-lucide="coffee" class="w-9 h-9 text-[#5F86A6]"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Comodidades</h3>
+            <p class="text-sm text-gray-600">Asientos reclinables, aire acondicionado y servicio de refrigerios</p>
+          </div>
+          <div class="text-center bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all hover:-translate-y-1 border-2 border-[#CFE3F1]">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-4 shadow-md bg-gradient-to-br from-[#CFE3F1] to-[#EDF4FA]">
+              <i data-lucide="users" class="w-9 h-9 text-[#5F86A6]"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Atención 24/7</h3>
+            <p class="text-sm text-gray-600">Nuestro equipo está disponible para ayudarte en cualquier momento</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Offers -->
+    <section class="py-16" style="background:linear-gradient(to bottom,white,#EDF4FA)">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-4 shadow-sm border-2 font-semibold" style="background:linear-gradient(to right,#FFC0CB,#CFE3F1);color:#5F86A6;border-color:#CFE3F1">
+            <i data-lucide="tag" class="w-5 h-5"></i>
+            <span>¡SUPER OFERTAS!</span>
+          </div>
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-3">🔥 No te las pierdas</h2>
+          <p class="text-lg text-gray-600">aprovechá estos descuentos antes de que se terminen</p>
+        </div>
+        <div id="offers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- Hotels -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-4 shadow-sm border-2 font-semibold bg-[#EDF4FA] text-[#5F86A6] border-[#CFE3F1]">
+            <i data-lucide="coffee" class="w-5 h-5"></i>
+            <span>¡PAQUETES CON ALOJAMIENTO!</span>
+          </div>
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-3">🏨 Hoteles que te van a encantar</h2>
+          <p class="text-lg text-gray-600">combiná tu viaje con alojamiento y ahorrá más</p>
+        </div>
+        <div id="hotels-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- Destinations -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-3">Destinos que vas a amar</h2>
+          <p class="text-lg text-gray-600">los lugares más elegidos por nuestros viajeros</p>
+        </div>
+        <div id="destinations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== VISTA CARRITO (Figma: Carrito-de-compras-elegante) ==================== -->
+  <main id="view-cart" class="hidden min-h-[75vh] bg-gradient-to-b from-[#EDF4FA] to-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <h2 class="text-2xl font-bold text-[#243A5E]">Tus Viajes Seleccionados</h2>
+          <p id="cart-subtitle" class="text-sm text-gray-600"></p>
+        </div>
+        <button onclick="switchView('home')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-[#5F86A6] hover:text-[#243A5E] bg-white border border-[#CFE3F1] shadow-sm">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Seguir comprando</span>
+        </button>
+      </div>
+
+      <div id="order-complete" class="hidden text-center py-16 bg-white rounded-2xl border border-[#CFE3F1] shadow-sm">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+          <i data-lucide="check" class="h-8 w-8 text-green-600"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">¡Reserva Confirmada!</h2>
+        <p class="text-gray-600 mb-2">Hemos enviado tus pasajes al correo electrónico</p>
+        <p id="confirm-code" class="text-sm font-mono text-gray-500 mb-6"></p>
+        <button onclick="switchView('home')" class="px-6 py-3 rounded-xl bg-[#5F86A6] hover:bg-[#243A5E] text-white font-semibold">Volver al inicio</button>
+      </div>
+
+      <div id="empty-cart" class="hidden text-center py-16 bg-white rounded-2xl border border-[#CFE3F1] shadow-sm">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-[#CFE3F1] rounded-full mb-4">
+          <i data-lucide="bus" class="h-8 w-8 text-[#5F86A6]"></i>
+        </div>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">No hay viajes en tu carrito</h2>
+        <p class="text-gray-600 mb-6">Buscá y seleccioná tus destinos favoritos</p>
+        <button onclick="switchView('home')" class="px-6 py-3 rounded-xl bg-[#5F86A6] hover:bg-[#243A5E] text-white font-semibold">Buscar Viajes</button>
+      </div>
+
+      <div id="cart-layout" class="grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-4">
+          <div id="trips-list" class="space-y-4"></div>
+
+          <div id="checkout-section" class="hidden bg-white rounded-2xl border border-[#CFE3F1] p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-semibold text-[#243A5E]">Datos del Pasajero y Pago</h3>
+              <button onclick="toggleCheckout(false)" class="text-sm text-[#5F86A6] hover:underline">← Editar viajes</button>
+            </div>
+            <form id="checkout-form" class="space-y-4">
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div><label class="text-xs font-semibold text-gray-600 block mb-1">Nombre completo *</label><input required class="w-full px-3 py-2.5 rounded-xl border border-[#CFE3F1] bg-[#EDF4FA]/40 outline-none focus:border-[#5F86A6]" placeholder="Ej: Bruno Tejeda" /></div>
+                <div><label class="text-xs font-semibold text-gray-600 block mb-1">DNI *</label><input required class="w-full px-3 py-2.5 rounded-xl border border-[#CFE3F1] bg-[#EDF4FA]/40 outline-none focus:border-[#5F86A6]" placeholder="46.123.456" /></div>
+                <div><label class="text-xs font-semibold text-gray-600 block mb-1">Email *</label><input type="email" required class="w-full px-3 py-2.5 rounded-xl border border-[#CFE3F1] bg-[#EDF4FA]/40 outline-none focus:border-[#5F86A6]" placeholder="tu@email.com" /></div>
+                <div><label class="text-xs font-semibold text-gray-600 block mb-1">Teléfono *</label><input required class="w-full px-3 py-2.5 rounded-xl border border-[#CFE3F1] bg-[#EDF4FA]/40 outline-none focus:border-[#5F86A6]" placeholder="11-3235-9362" /></div>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-gray-600 block mb-1">Método de pago</label>
+                <select class="w-full px-3 py-2.5 rounded-xl border border-[#CFE3F1] bg-[#EDF4FA]/40 outline-none focus:border-[#5F86A6]">
+                  <option>Tarjeta de Crédito / Débito</option>
+                  <option>Mercado Pago</option>
+                  <option>Transferencia Bancaria</option>
+                </select>
+              </div>
+              <button type="submit" class="w-full h-12 rounded-xl bg-[#5F86A6] hover:bg-[#243A5E] text-white font-semibold shadow-md transition-colors">
+                Confirmar y Pagar <span id="checkout-btn-total"></span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="lg:col-span-1">
+          <div class="sticky top-24 bg-white rounded-2xl border border-[#CFE3F1] p-6 shadow-sm space-y-4">
+            <h3 class="text-lg font-bold text-[#243A5E]">Resumen de Compra</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between text-gray-600"><span>Subtotal (<span id="sum-pax">0</span> pasajeros)</span><span id="sum-subtotal" class="font-semibold text-gray-900">$0</span></div>
+              <div class="flex justify-between text-gray-600"><span>Impuestos (8%)</span><span id="sum-taxes" class="font-semibold text-gray-900">$0</span></div>
+              <div class="flex justify-between text-red-500"><span>Descuentos aplicados</span><span id="sum-discount" class="font-semibold">-$0</span></div>
+            </div>
+            <div class="border-t border-[#CFE3F1] pt-4 flex justify-between items-center">
+              <span class="font-bold text-[#243A5E]">Total a Pagar</span>
+              <span id="sum-total" class="text-2xl font-extrabold text-[#243A5E]">$0</span>
+            </div>
+            <button id="btn-continue" onclick="toggleCheckout(true)" class="w-full h-12 rounded-xl bg-[#5F86A6] hover:bg-[#243A5E] text-white font-semibold shadow-md transition-colors">
+              Continuar con la Compra
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-gray-300" style="background:linear-gradient(to bottom right,#243A5E,#1a2940)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="p-2.5 rounded-2xl shadow-lg" style="background:linear-gradient(to bottom right,#8FB6D8,#5F86A6)">
+              <i data-lucide="bus" class="text-white w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white">Viajes Los Choris</h3>
+          </div>
+          <p class="text-sm text-gray-400">Flota moderna, cancelación flexible y atención 24/7.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-3">Servicios</h4>
+          <p class="text-sm text-[#8FB6D8]">Encomiendas · Grupo y Empresas · Programa de Puntos · Seguros de Viaje</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-3">Contacto</h4>
+          <p class="text-sm">0800-555-VIAJES · 24hs todos los días</p>
+          <p class="text-sm">hola@viajesexpress.com.ar</p>
+          <p class="text-sm">Av. Corrientes 1234, CABA</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-[#243A5E] text-white px-5 py-3 rounded-2xl shadow-xl border border-[#8FB6D8] flex items-center gap-3 text-sm font-medium">
+    <span id="toast-msg">Agregado al carrito</span>
+    <button onclick="switchView('cart')" class="underline text-[#8FB6D8] font-bold">Ver carrito →</button>
+  </div>
+
+  <script>
+    const CART_KEY = "viajes_los_choris_web_v1";
+    const fmt = (n) => "$" + Math.round(Number(n) || 0).toLocaleString("es-AR");
+
+    const OFFERS = [
+      { id: 101, origin: "Córdoba", destination: "Buenos Aires", price: 12500, originalPrice: 18000, discount: 30, timeLeft: "48hs", duration: "9h 00min", busType: "Servicio Premium", image: "https://images.unsplash.com/photo-1678838033048-733cf25705f4?auto=format&fit=crop&w=800&q=80" },
+      { id: 102, origin: "Buenos Aires", destination: "Mendoza", price: 15900, originalPrice: 22000, discount: 28, timeLeft: "72hs", duration: "13h 30min", busType: "Servicio Cama", image: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=800&q=80" },
+      { id: 103, origin: "Buenos Aires", destination: "Bariloche", price: 24500, originalPrice: 32000, discount: 25, timeLeft: "24hs", duration: "20h 00min", busType: "Servicio Suite", image: "https://images.unsplash.com/photo-1666066378095-6fad8fc100ea?auto=format&fit=crop&w=800&q=80" }
+    ];
+
+    const HOTELS = [
+      { id: 201, name: "Hotel Central Plaza", location: "Buenos Aires - Centro", price: 8500, rating: 4.7, reviews: 234, amenities: ["WiFi", "Desayuno", "Estacionamiento"], image: "https://images.unsplash.com/photo-1672751590157-3be09b152b77?auto=format&fit=crop&w=800&q=80" },
+      { id: 202, name: "Posada del Viajero", location: "Mendoza - Ciudad", price: 6200, rating: 4.5, reviews: 156, amenities: ["WiFi", "Pileta", "Restaurant"], image: "https://images.unsplash.com/photo-1586158203701-61c92d0ce77c?auto=format&fit=crop&w=800&q=80" },
+      { id: 203, name: "Lodge Patagónico", location: "Bariloche - Centro", price: 12800, rating: 4.9, reviews: 312, amenities: ["WiFi", "Spa", "Vista al lago"], image: "https://images.unsplash.com/photo-1731336478850-6bce7235e320?auto=format&fit=crop&w=800&q=80" }
+    ];
+
+    const DESTINATIONS = [
+      { id: 301, name: "Buenos Aires", description: "La capital del tango", rating: 4.8, trips: 45, price: 14000, image: "https://images.unsplash.com/photo-1678838033048-733cf25705f4?auto=format&fit=crop&w=800&q=80" },
+      { id: 302, name: "Mendoza", description: "Tierra de vinos", rating: 4.9, trips: 32, price: 16500, image: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=800&q=80" },
+      { id: 303, name: "Bariloche", description: "Paraíso patagónico", rating: 5.0, trips: 28, price: 25000, image: "https://images.unsplash.com/photo-1666066378095-6fad8fc100ea?auto=format&fit=crop&w=800&q=80" },
+      { id: 304, name: "Córdoba", description: "Historia y naturaleza", rating: 4.7, trips: 38, price: 13200, image: "https://images.unsplash.com/photo-1692073904050-e769dcfdd433?auto=format&fit=crop&w=800&q=80" }
+    ];
+
+    const DEFAULT_TRIPS = [
+      { id: 1, origin: "Buenos Aires", destination: "Mar del Plata", date: "Sábado 29 Mar 2026", duration: "5h 30min", price: 14500, passengers: 2, busType: "Servicio Premium", hasDiscount: true, discountPercentage: 15, image: "https://images.unsplash.com/photo-1583376575479-5e46c6ed872b?auto=format&fit=crop&w=400&q=80" },
+      { id: 2, origin: "Córdoba", destination: "Rosario", date: "Domingo 30 Mar 2026", duration: "4h 45min", price: 11800, passengers: 1, busType: "Servicio Ejecutivo", hasDiscount: false, discountPercentage: 0, image: "https://images.unsplash.com/photo-1762378724772-68c054805e8c?auto=format&fit=crop&w=400&q=80" }
+    ];
+
+    let trips = (() => {
+      try {
+        const raw = localStorage.getItem(CART_KEY);
+        if (raw === null) { localStorage.setItem(CART_KEY, JSON.stringify(DEFAULT_TRIPS)); return [...DEFAULT_TRIPS]; }
+        return JSON.parse(raw);
+      } catch { return [...DEFAULT_TRIPS]; }
+    })();
+
+    function saveCart() {
+      localStorage.setItem(CART_KEY, JSON.stringify(trips));
+      updateBadge();
+      renderCart();
+    }
+
+    function updateBadge() {
+      const badge = document.getElementById("cart-badge");
+      if (trips.length > 0) { badge.textContent = trips.length; badge.classList.remove("hidden"); }
+      else badge.classList.add("hidden");
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      document.getElementById("toast-msg").textContent = msg;
+      el.classList.remove("hidden");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => el.classList.add("hidden"), 3500);
+    }
+
+    function switchView(view) {
+      const isHome = view === "home";
+      document.getElementById("view-home").classList.toggle("hidden", !isHome);
+      document.getElementById("view-cart").classList.toggle("hidden", isHome);
+      document.getElementById("order-complete").classList.add("hidden");
+      if (!isHome) { toggleCheckout(false); renderCart(); }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function addToCart(trip) {
+      trips.push({
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        origin: trip.origin, destination: trip.destination,
+        date: trip.date || "Sábado 29 Mar 2026", duration: trip.duration || "6h 30min",
+        price: trip.price, passengers: 1, busType: trip.busType || "Servicio Premium",
+        hasDiscount: Boolean(trip.discount), discountPercentage: trip.discount || 0,
+        image: trip.image
+      });
+      saveCart();
+      showToast(`${trip.origin} → ${trip.destination} agregado al carrito`);
+    }
+
+    document.getElementById("offers-grid").innerHTML = OFFERS.map((o) => `
+      <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border-4 border-[#CFE3F1] hover:border-[#8FB6D8] hover:-translate-y-1">
+        <div class="relative h-48 overflow-hidden bg-gradient-to-br from-[#5F86A6] to-[#243A5E]">
+          <img src="${o.image}" alt="${o.destination}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+          <div class="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-1.5 rounded-full shadow-lg text-sm font-bold">${o.discount}% OFF</div>
+          <div class="absolute top-3 left-3 bg-white text-gray-700 px-3 py-1 rounded-full text-xs font-semibold shadow">⏰ ${o.timeLeft}</div>
+        </div>
+        <div class="p-6" style="background:linear-gradient(to bottom,white,#EDF4FA)">
+          <h3 class="text-2xl font-bold text-gray-800 mb-1">${o.destination}</h3>
+          <p class="text-sm text-gray-500 mb-4">Desde ${o.origin}</p>
+          <div class="flex items-end justify-between">
+            <div><p class="text-sm text-gray-400 line-through">${fmt(o.originalPrice)}</p><p class="text-3xl font-bold text-[#5F86A6]">${fmt(o.price)}</p></div>
+            <button onclick="buyOffer(${o.id})" class="text-white px-5 py-3 rounded-2xl transition-all hover:scale-105 flex items-center gap-2 shadow-md font-semibold" style="background:linear-gradient(to right,#8FB6D8,#5F86A6)">
+              <span>Comprar</span><i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>`).join("");
+
+    document.getElementById("hotels-grid").innerHTML = HOTELS.map((h) => `
+      <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all border-2 border-[#CFE3F1] hover:border-[#8FB6D8]">
+        <div class="relative h-52 overflow-hidden bg-gradient-to-br from-[#5F86A6] to-[#243A5E]">
+          <img src="${h.image}" alt="${h.name}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+          <div class="absolute top-3 left-3 bg-white rounded-2xl px-3 py-1 text-sm font-semibold shadow border border-[#CFE3F1]">⭐ ${h.rating} <span class="text-xs text-gray-500">(${h.reviews})</span></div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold mb-1 text-[#243A5E]">${h.name}</h3>
+          <p class="text-sm text-gray-500 mb-3">📍 ${h.location}</p>
+          <div class="flex flex-wrap gap-2 mb-4">${h.amenities.map((a) => `<span class="text-xs px-3 py-1 rounded-full bg-[#EDF4FA] text-[#5F86A6] border border-[#CFE3F1]">${a}</span>`).join("")}</div>
+          <div class="flex items-end justify-between pt-4 border-t-2 border-[#EDF4FA]">
+            <div><p class="text-xs text-gray-500">por noche</p><p class="text-2xl font-bold text-[#5F86A6]">${fmt(h.price)}</p></div>
+            <button onclick="buyHotel(${h.id})" class="text-white px-4 py-2.5 rounded-2xl shadow-md text-sm font-semibold hover:scale-105 transition-transform" style="background:linear-gradient(to right,#8FB6D8,#5F86A6)">Ver paquete</button>
+          </div>
+        </div>
+      </div>`).join("");
+
+    document.getElementById("destinations-grid").innerHTML = DESTINATIONS.map((d) => `
+      <div onclick="buyDestination(${d.id})" class="cursor-pointer bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all border-2 border-[#CFE3F1] hover:border-[#8FB6D8] hover:-translate-y-1">
+        <div class="relative h-56 overflow-hidden bg-gradient-to-br from-[#5F86A6] to-[#243A5E]">
+          <img src="${d.image}" alt="${d.name}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+          <div class="absolute top-3 right-3 bg-white rounded-2xl px-3 py-1 text-sm font-semibold shadow">⭐ ${d.rating}</div>
+          <div class="absolute bottom-0 left-0 right-0 p-4 text-white"><h3 class="text-xl font-bold">${d.name}</h3><p class="text-sm text-gray-200">${d.description}</p></div>
+        </div>
+        <div class="p-4 border-t-2 border-[#CFE3F1] flex items-center justify-between" style="background:linear-gradient(to right,#EDF4FA,#CFE3F1)">
+          <span class="text-xs text-gray-700">${d.trips} salidas semanales</span><span class="text-sm font-bold text-[#243A5E]">${fmt(d.price)}</span>
+        </div>
+      </div>`).join("");
+
+    function renderCart() {
+      const totalPax = trips.reduce((s, t) => s + t.passengers, 0);
+      document.getElementById("cart-subtitle").textContent = trips.length
+        ? `${trips.length} ${trips.length === 1 ? "viaje" : "viajes"} · ${totalPax} ${totalPax === 1 ? "pasajero" : "pasajeros"}`
+        : "Carrito vacío";
+      const empty = trips.length === 0;
+      document.getElementById("empty-cart").classList.toggle("hidden", !empty);
+      document.getElementById("cart-layout").classList.toggle("hidden", empty);
+      if (empty) return;
+
+      document.getElementById("trips-list").innerHTML = trips.map((t) => `
+        <div class="bg-white rounded-2xl border border-[#CFE3F1] p-5 shadow-sm flex flex-col sm:flex-row gap-4">
+          <img src="${t.image}" alt="${t.destination}" class="w-full sm:w-36 h-28 object-cover rounded-xl flex-shrink-0 bg-[#EDF4FA]" onerror="this.style.display='none'" />
+          <div class="flex-1 flex flex-col justify-between gap-3">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="text-lg font-bold text-[#243A5E]">${t.origin} → ${t.destination}</h3>
+                  ${t.hasDiscount ? `<span class="px-2 py-0.5 rounded-md bg-orange-500 text-white text-xs font-bold">-${t.discountPercentage}% OFF</span>` : ""}
+                </div>
+                <p class="text-xs text-gray-500 mt-0.5">${t.busType} · ${t.date} · ${t.duration}</p>
+              </div>
+              <button onclick="removeTrip(${t.id})" class="text-gray-400 hover:text-red-500 p-1">✕</button>
+            </div>
+            <div class="flex items-center justify-between flex-wrap gap-3 pt-2 border-t border-[#EDF4FA]">
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-500">Pasajeros:</span>
+                <button onclick="changePax(${t.id},-1)" class="w-7 h-7 rounded-lg bg-[#EDF4FA] hover:bg-[#CFE3F1] font-bold text-[#243A5E]">−</button>
+                <span class="font-bold text-sm w-5 text-center">${t.passengers}</span>
+                <button onclick="changePax(${t.id},1)" class="w-7 h-7 rounded-lg bg-[#EDF4FA] hover:bg-[#CFE3F1] font-bold text-[#243A5E]">+</button>
+              </div>
+              <div class="text-right"><span class="text-xs text-gray-400 block">${fmt(t.price)} c/u</span><strong class="text-xl text-[#243A5E]">${fmt(t.price * t.passengers)}</strong></div>
+            </div>
+          </div>
+        </div>`).join("");
+
+      const sub = trips.reduce((s, t) => s + t.price * t.passengers, 0);
+      const tax = sub * 0.08;
+      const disc = trips.reduce((s, t) => t.hasDiscount && t.discountPercentage ? s + (t.price * t.passengers * (t.discountPercentage / 100)) : s, 0);
+      const total = Math.max(0, sub + tax - disc);
+      document.getElementById("sum-pax").textContent = totalPax;
+      document.getElementById("sum-subtotal").textContent = fmt(sub);
+      document.getElementById("sum-taxes").textContent = fmt(tax);
+      document.getElementById("sum-discount").textContent = "-" + fmt(disc);
+      document.getElementById("sum-total").textContent = fmt(total);
+      document.getElementById("checkout-btn-total").textContent = `(${fmt(total)})`;
+    }
+
+    window.buyOffer = (id) => { const o = OFFERS.find((x) => x.id === id); if (o) addToCart(o); };
+    window.buyHotel = (id) => { const h = HOTELS.find((x) => x.id === id); if (h) addToCart({ origin: "Alojamiento", destination: h.name, price: h.price, busType: h.location, duration: "1 noche", image: h.image }); };
+    window.buyDestination = (id) => { const d = DESTINATIONS.find((x) => x.id === id); if (d) addToCart({ origin: "Buenos Aires", destination: d.name, price: d.price, busType: "Servicio Ejecutivo", image: d.image }); };
+    window.changePax = (id, delta) => { trips = trips.map((t) => t.id === id ? { ...t, passengers: Math.max(1, t.passengers + delta) } : t); saveCart(); };
+    window.removeTrip = (id) => { trips = trips.filter((t) => t.id !== id); saveCart(); };
+    window.toggleCheckout = (show) => {
+      document.getElementById("trips-list").classList.toggle("hidden", show);
+      document.getElementById("checkout-section").classList.toggle("hidden", !show);
+      document.getElementById("btn-continue").classList.toggle("hidden", show);
+    };
+
+    document.getElementById("search-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      addToCart({
+        origin: document.getElementById("search-origin").value.trim() || "Buenos Aires",
+        destination: document.getElementById("search-dest").value.trim() || "Córdoba",
+        date: document.getElementById("search-date").value || "2026-03-29",
+        price: 15500, busType: "Servicio Premium",
+        image: "https://images.unsplash.com/photo-1583376575479-5e46c6ed872b?auto=format&fit=crop&w=600&q=80"
+      });
+    });
+
+    document.getElementById("checkout-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("confirm-code").textContent = "Número de confirmación: #VE-" + Math.random().toString(36).slice(2, 10).toUpperCase();
+      trips = [];
+      localStorage.setItem(CART_KEY, JSON.stringify([]));
+      updateBadge();
+      document.getElementById("cart-layout").classList.add("hidden");
+      document.getElementById("order-complete").classList.remove("hidden");
+      lucide.createIcons();
+    });
+
+    updateBadge();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
